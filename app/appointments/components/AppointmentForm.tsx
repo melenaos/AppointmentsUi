@@ -10,14 +10,14 @@ export function AppointmentForm({
 }: {
   onSubmit: (data: CreateAppointment) => void;
   loading: boolean;
-  error: ApiError;
+  error: ApiError | null;
 }) {
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
   // Check error coming from the server
   useEffect(() => {
-    if (error?.errors.length > 0) {
-      setErrors(error?.errors);
+    if (error && error.errors.length > 0) {
+      setErrors(error.errors);
     }
   }, [error]);
 
