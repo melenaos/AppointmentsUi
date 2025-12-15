@@ -13,6 +13,18 @@ export default function Appointments() {
   const create = useCreateAppointment();
 
   return (
-    <AppointmentForm onSubmit={create.mutate} loading={create.isPending} error={create.error}/>
+    <div className="container mx-auto max-w-lg my-10">
+      <AppointmentForm
+        onSubmit={create.mutate}
+        loading={create.isPending}
+        error={create.error}
+      />
+
+      {create.isSuccess && create.data && (
+        <div className="success-message">
+          {create.data.message}
+        </div>
+      )}
+    </div>
   );
 }

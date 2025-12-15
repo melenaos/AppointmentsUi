@@ -1,8 +1,8 @@
 export type Appointment = {
-  Id: string;
-  ClientName: string;
-  AppointmentTime: string;
-  ServiceDurationMinutes: number;
+  id: string;
+  clientName: string;
+  appointmentTime: string;
+  serviceDurationMinutes: number;
 };
 
 export type CreateAppointment = {
@@ -12,7 +12,7 @@ export type CreateAppointment = {
 };
 
 export type AppointmentCreatedResponse = {
-  Id: string;
-  Message: string;
+  id: string;
+  message: string;
 };
 
