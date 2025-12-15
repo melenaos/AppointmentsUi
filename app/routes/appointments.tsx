@@ -1,4 +1,4 @@
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/appointments";
 import { AppointmentForm } from "~/appointments/components/AppointmentForm";
 import { useCreateAppointment } from "~/appointments/hooks/useCreateAppointment";
 
@@ -13,6 +13,6 @@ export default function Appointments() {
   const create = useCreateAppointment();
 
   return (
-    <AppointmentForm onSubmit={create.mutate} loading={create.isPending} />
+    <AppointmentForm onSubmit={create.mutate} loading={create.isPending} error={create.error}/>
   );
 }

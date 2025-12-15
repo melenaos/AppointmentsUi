@@ -1,22 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CreateAppointment } from "../types";
 import type { ValidationError } from "~/types/ValidationError";
+import { type ApiError } from "~/lib/http/ApiError";
 
 export function AppointmentForm({
   onSubmit,
   loading,
+  error,
 }: {
   onSubmit: (data: CreateAppointment) => void;
   loading: boolean;
+  error: ApiError;
 }) {
   const [errors, setErrors] = useState<ValidationError[]>([]);
+
+  // Check error coming from the server
+  useEffect(() => {
+    if (error?.errors.length > 0) {
+      setErrors(error?.errors);
+    }
+  }, [error]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const nextErrors: ValidationError[] = [];
+    var nextErrors: ValidationError[] = [];
 
     // Satinize data
     const clientName = data.get("clientName") as string;
@@ -30,31 +40,32 @@ export function AppointmentForm({
     // Basic validation  (I should move this to a business layer)
     if (!clientName || clientName.trim() === "") {
       nextErrors.push({
-        Code: "AppointmentCreate.ClientName.Missing",
-        Message: "Client name is required",
+        code: "AppointmentCreate.ClientName.Missing",
+        message: "The client name is required.",
       });
     }
 
     if (Number.isNaN(appointmentTime.getTime())) {
       nextErrors.push({
-        Code: "AppointmentCreate.AppointmentTime.NotValidDate",
-        Message: "Please enter a valid date and time",
+        code: "AppointmentCreate.AppointmentTime.NotValidDate",
+        message: "Please enter a valid date and time",
       });
     }
 
     if (duration !== undefined && !Number.isFinite(duration)) {
       nextErrors.push({
-        Code: "AppointmentCreate.Duration.NotValidNumber",
-        Message: "Duration must be a number",
+        code: "AppointmentCreate.Duration.NotValidNumber",
+        message: "Duration must be a number",
       });
     } else if (duration !== undefined && duration <= 0) {
       nextErrors.push({
-        Code: "AppointmentCreate.Duration.InvalidNumber",
-        Message: "Duration must be a positive number",
+        code: "AppointmentCreate.Duration.InvalidNumber",
+        message: "Duration must be greater than zero",
       });
     }
 
     // Don't stop submit, allow the server to return their own validation error
+    // server response will override the errors (see useEffect)
     setErrors(nextErrors);
 
     // Create the request object and submit
@@ -68,7 +79,7 @@ export function AppointmentForm({
   }
 
   function getFieldErrors(errors: ValidationError[], prefix: string) {
-    return errors.filter((e) => e.Code.startsWith(prefix));
+    return errors.filter((e) => e.code.startsWith(prefix));
   }
 
   const clientNameErrors = getFieldErrors(
@@ -107,8 +118,8 @@ export function AppointmentForm({
             />
 
             {clientNameErrors.map((error) => (
-              <span key={error.Code} className="validation-message">
-                {error.Message}
+              <span key={error.code} className="validation-message">
+                {error.message}
               </span>
             ))}
           </div>
@@ -130,8 +141,8 @@ export function AppointmentForm({
             />
 
             {appointmentTimeErrors.map((error) => (
-              <span key={error.Code} className="validation-message">
-                {error.Message}
+              <span key={error.code} className="validation-message">
+                {error.message}
               </span>
             ))}
           </div>
@@ -146,15 +157,14 @@ export function AppointmentForm({
               className={`form-element-input ${
                 durationErrors.length ? "validation-error" : ""
               }`}
-              // type="number" Commented it out just to test the local validation
-              type="text"
+              type="number"
               name="duration"
               id="duration"
             />
 
             {durationErrors.map((error) => (
-              <span key={error.Code} className="validation-message">
-                {error.Message}
+              <span key={error.code} className="validation-message">
+                {error.message}
               </span>
             ))}
           </div>

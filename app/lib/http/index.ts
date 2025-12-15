@@ -1,4 +1,5 @@
 import {config} from '~/config'
+import { HttpError } from './HttpError';
 
 /**
  * Centralized HTTP client for the application.
@@ -32,9 +33,17 @@ export async function http<T>(
     ...init,
   });
 
+  // If the response is not ok, try to parse the response body
   if (!res.ok) {
-    const error = await res.text();
-    throw new Error(error || "Request failed");
+    let errorBody: unknown = null;
+
+    try {
+      errorBody = await res.json(); 
+    } catch {
+      errorBody = await res.text();
+    }
+    // and throw it as an error
+    throw new HttpError(res.status, errorBody);
   }
 
   return res.json() as Promise<T>;

@@ -10,3 +10,9 @@ export type CreateAppointment = {
   AppointmentTime: string;
   ServiceDurationMinutes?: number;
 };
+
+export type AppointmentCreatedResponse = {
+  Id: string;
+  Message: string;
+};
+
