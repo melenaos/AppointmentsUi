@@ -7,10 +7,25 @@ export function AppointmentForm({
   onSubmit: (data: CreateAppointment) => void;
   loading: boolean;
 }) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const appointment: CreateAppointment = {
+      ClientName: data.get("customerName") as string,
+      AppointmentTime: new Date(data.get("datetime") as string).toISOString(),
+      ServiceDurationMinutes: Number(data.get("Duration")),
+    };
+
+    onSubmit(appointment);
+  }
+
   return (
     <div className="container mx-auto max-w-lg my-10">
-      <form>
-        <fieldset>
+      <form onSubmit={handleSubmit}>
+        <fieldset disabled={loading}>
           <div className="mb-5 lg:mb-8 text-center">
             <h2>Appointments</h2>
             <p className="text-lg">Create a new appointment</p>
@@ -54,22 +69,12 @@ export function AppointmentForm({
               type="number"
               name="Duration"
               id="Duration"
-              required
             />
           </div>
         </fieldset>
 
         <div className="text-right">
-          <button
-            onClick={() =>
-              onSubmit({
-                AppointmentTime: "2026-01-01",
-                ServiceDurationMinutes: 30,
-                ClientName: "Menelaos Vergis",
-              })
-            }
-            className="btn"
-          >
+          <button className="btn" disabled={loading}>
             {loading ? "Saving..." : "Create appointment"}
           </button>
         </div>
