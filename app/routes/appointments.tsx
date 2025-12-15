@@ -17,6 +17,7 @@ export default function Appointments() {
 
   return (
     <div className="container mx-auto max-w-lg my-10">
+      
       <AppointmentForm
         onSubmit={create.mutate}
         loading={create.isPending}

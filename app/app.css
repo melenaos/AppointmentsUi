@@ -49,5 +49,5 @@ h2{
 }
 
 .success-message{
-  @apply bg-teal-600/20 text-gray-900 rounded-md p-4 mt-2 text-center
+  @apply bg-teal-600/20 text-gray-900 rounded-md p-4 my-4 text-center
 }
