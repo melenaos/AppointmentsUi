@@ -1,6 +1,15 @@
 # AppointmentsUi
 
+This is the react UI project of the backend project AppointmentsBackend.
+ https://github.com/melenaos/AppointmentsBackend
+ 
 
-## Check later
+## First run instructions
 
-Maybe we should create a specific CreateAppointmentDTO for the Create action at WebAPI
+The backend must be running at https://localhost:5001
+
+```
+npm install
+npm run dev
+
+```
