@@ -1,4 +1,4 @@
-export type Appointment = {
+export type AppointmentDto = {
   id: string;
   clientName: string;
   appointmentTime: string;

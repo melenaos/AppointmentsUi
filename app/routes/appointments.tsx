@@ -1,5 +1,7 @@
 import type { Route } from "./+types/appointments";
 import { AppointmentForm } from "~/appointments/components/AppointmentForm";
+import { AppointmentList } from "~/appointments/components/AppointmentList";
+import { useAppointments } from "~/appointments/hooks/useAppointments";
 import { useCreateAppointment } from "~/appointments/hooks/useCreateAppointment";
 
 export function meta({}: Route.MetaArgs) {
@@ -11,6 +13,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Appointments() {
   const create = useCreateAppointment();
+  const appointments = useAppointments();
 
   return (
     <div className="container mx-auto max-w-lg my-10">
@@ -25,6 +28,20 @@ export default function Appointments() {
           {create.data.message}
         </div>
       )}
+
+
+      {appointments.isLoading && <p>Loading appointments…</p>}
+
+      {appointments.isError && (
+        <p className="error">
+          Failed to load appointments
+        </p>
+      )}
+
+      {appointments.isSuccess && (
+        <AppointmentList items={appointments.data} />
+      )}
+
     </div>
   );
 }

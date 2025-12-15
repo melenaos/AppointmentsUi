@@ -1,14 +1,14 @@
 import { HttpError } from "~/lib/http/HttpError";
 import { http } from "../lib/http";
-import type { Appointment, AppointmentCreatedResponse, CreateAppointment } from "./types";
+import type { AppointmentDto, AppointmentCreatedResponse, CreateAppointment } from "./types";
 import type { ApiError } from "~/lib/http/ApiError";
 
 export function getAppointments(/* pagination and filters */) {
-  return http<Appointment[]>(`/appointments`);
+  return http<AppointmentDto[]>(`/appointments`);
 }
 
 export function getAppointment(id: string) {
-  return http<Appointment[]>(`/appointments/${id}`);
+  return http<AppointmentDto>(`/appointments/${id}`);
 }
 
 export async function createAppointment(input: CreateAppointment) {
