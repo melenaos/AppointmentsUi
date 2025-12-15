@@ -16,8 +16,14 @@ export function AppointmentForm({
 
   // Check error coming from the server
   useEffect(() => {
-    if (error && error.errors.length > 0) {
+    if (error?.errors && error.errors.length > 0) {
       setErrors(error.errors);
+    }
+    else if(error)
+    {
+      console.log(error as any)
+      setErrors([{code:"",message:error as any}]);
+
     }
   }, [error]);
 
