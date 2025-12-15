@@ -13,7 +13,7 @@ export function AppointmentForm({
       ServiceDurationMinutes: 30,
       ClientName: "Menelaos Vergis",
     })}>
-      {loading ? "Saving..." : "Create"}
+      {loading ? "Saving..." : "Create appointment"}
     </button>
   );
 }

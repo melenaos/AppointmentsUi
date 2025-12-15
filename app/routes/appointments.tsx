@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { Route } from "./+types/home";
-import {AppointmentForm} from "../appointments/components/AppointmentForm"
+import { AppointmentForm } from "~/appointments/components/AppointmentForm";
+import { useCreateAppointment } from "~/appointments/hooks/useCreateAppointment";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,18 +10,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Appointments() {
-  const { data, isLoading } = useAppointments();
-
-  const createAppointment = async (data: AppointmentInput) => {
-    setLoading(true);
-    await appointmentService.create(data);
-    setLoading(false);
-  };
+  const create = useCreateAppointment();
 
   return (
-     <AppointmentForm
-      onSubmit={createAppointment}
-      loading={loading}
-    />
+    <AppointmentForm onSubmit={create.mutate} loading={create.isPending} />
   );
 }
