@@ -13,3 +13,31 @@ body {
     color-scheme: dark;
   }
 }
+
+h2{
+   @apply text-3xl mb-2
+}
+.input {
+  @apply text-gray-900
+    dark:bg-gray-900 dark:text-gray-100
+    dark:border-gray-700
+    focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+.form-element{
+  @apply mb-2 lg:mb-3 grid grid-cols-12 gap-1.5 lg:gap-2 lg:items-center
+}
+
+.form-element-label{
+  @apply col-span-12 lg:col-span-4
+         inline-block text-sm 
+}
+
+.form-element-input{
+  @apply col-span-12 lg:col-span-8
+        text-gray-900 bg-white border border-gray-300 py-2 px-3 rounded-md text-[1em] leading-tight transition duration-200 outline-none placeholder:opacity-100 placeholder:text-gray-400 focus-within:border-indigo-700 w-full
+}
+
+.btn{
+  @apply bg-indigo-700 text-white shadow-md text-[1em] px-4 py-2 rounded-md relative inline-flex justify-center items-center whitespace-nowrap cursor-pointer no-underline leading-tight transition-all duration-200 hover:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700
+}
