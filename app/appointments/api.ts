@@ -5,7 +5,7 @@ export function getAppointments(/* pagination and filters */) {
   return http<Appointment[]>(`/appointments`);
 }
 
-export function getAppointment(id: BigInt) {
+export function getAppointment(id: string) {
   return http<Appointment[]>(`/appointments/${id}`);
 }
 

@@ -1,12 +1,12 @@
 export type Appointment = {
-  Id: BigInt;
+  Id: string;
   ClientName: string;
-  AppointmentTime: Date;
+  AppointmentTime: string;
   ServiceDurationMinutes: number;
 };
 
 export type CreateAppointment = {
   ClientName: string;
-  AppointmentTime: Date;
+  AppointmentTime: string;
   ServiceDurationMinutes?: number;
 };

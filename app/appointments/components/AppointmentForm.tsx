@@ -1,12 +1,19 @@
-export function AppointmentForm({ onSubmit, loading }) {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({ date, time });
-  };
+import type { CreateAppointment } from "../types";
 
+export function AppointmentForm({
+  onSubmit,
+  loading,
+}: {
+  onSubmit: (data: CreateAppointment) => void;
+  loading: boolean;
+}) {
   return (
-    <form onSubmit={handleSubmit}>
-      <button disabled={loading}>Save</button>
-    </form>
+    <button onClick={() => onSubmit({
+      AppointmentTime: "2026-01-01",
+      ServiceDurationMinutes: 30,
+      ClientName: "Menelaos Vergis",
+    })}>
+      {loading ? "Saving..." : "Create"}
+    </button>
   );
 }
