@@ -7,18 +7,16 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-gray-100
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+ 
 }
 
 h2{
    @apply text-3xl mb-2
 }
 .input {
-  @apply text-gray-900
+  @apply 
     dark:bg-gray-900 dark:text-gray-100
     dark:border-gray-700
     focus:outline-none focus:ring-2 focus:ring-blue-500;
@@ -36,6 +34,14 @@ h2{
 .form-element-input{
   @apply col-span-12 lg:col-span-8
         text-gray-900 bg-white border border-gray-300 py-2 px-3 rounded-md text-[1em] leading-tight transition duration-200 outline-none placeholder:opacity-100 placeholder:text-gray-400 focus-within:border-indigo-700 w-full
+}
+
+.form-element-input.validation-error{
+  @apply border-red-300
+}
+
+.validation-message{
+ @apply text-red-400 col-span-12
 }
 
 .btn{

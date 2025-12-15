@@ -1,4 +1,6 @@
+import { useState } from "react";
 import type { CreateAppointment } from "../types";
+import type { ValidationError } from "~/types/ValidationError";
 
 export function AppointmentForm({
   onSubmit,
@@ -7,20 +9,77 @@ export function AppointmentForm({
   onSubmit: (data: CreateAppointment) => void;
   loading: boolean;
 }) {
+  const [errors, setErrors] = useState<ValidationError[]>([]);
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = e.currentTarget;
     const data = new FormData(form);
+    const nextErrors: ValidationError[] = [];
 
+    // Satinize data
+    const clientName = data.get("clientName") as string;
+    const appointmentTime = new Date(data.get("datetime") as string);
+    const durationRaw = data.get("duration");
+    const duration =
+      durationRaw === null || durationRaw === ""
+        ? undefined
+        : Number(durationRaw);
+
+    // Basic validation  (I should move this to a business layer)
+    if (!clientName || clientName.trim() === "") {
+      nextErrors.push({
+        Code: "AppointmentCreate.ClientName.Missing",
+        Message: "Client name is required",
+      });
+    }
+
+    if (Number.isNaN(appointmentTime.getTime())) {
+      nextErrors.push({
+        Code: "AppointmentCreate.AppointmentTime.NotValidDate",
+        Message: "Please enter a valid date and time",
+      });
+    }
+
+    if (duration !== undefined && !Number.isFinite(duration)) {
+      nextErrors.push({
+        Code: "AppointmentCreate.Duration.NotValidNumber",
+        Message: "Duration must be a number",
+      });
+    } else if (duration !== undefined && duration <= 0) {
+      nextErrors.push({
+        Code: "AppointmentCreate.Duration.InvalidNumber",
+        Message: "Duration must be a positive number",
+      });
+    }
+
+    // Don't stop submit, allow the server to return their own validation error
+    setErrors(nextErrors);
+
+    // Create the request object and submit
     const appointment: CreateAppointment = {
-      ClientName: data.get("customerName") as string,
-      AppointmentTime: new Date(data.get("datetime") as string).toISOString(),
-      ServiceDurationMinutes: Number(data.get("Duration")),
+      ClientName: clientName,
+      AppointmentTime: appointmentTime.toISOString(),
+      ServiceDurationMinutes: duration,
     };
 
     onSubmit(appointment);
   }
+
+  function getFieldErrors(errors: ValidationError[], prefix: string) {
+    return errors.filter((e) => e.Code.startsWith(prefix));
+  }
+
+  const clientNameErrors = getFieldErrors(
+    errors,
+    "AppointmentCreate.ClientName"
+  );
+  const appointmentTimeErrors = getFieldErrors(
+    errors,
+    "AppointmentCreate.AppointmentTime"
+  );
+  const durationErrors = getFieldErrors(errors, "AppointmentCreate.Duration");
 
   return (
     <div className="container mx-auto max-w-lg my-10">
@@ -31,45 +90,73 @@ export function AppointmentForm({
             <p className="text-lg">Create a new appointment</p>
           </div>
 
+          {/* ClientName */}
           <div className="form-element">
-            <label className="form-element-label" htmlFor="customerName">
-              Customer name
+            <label className="form-element-label" htmlFor="clientName">
+              Client name
             </label>
 
             <input
-              className="form-element-input"
+              className={`form-element-input ${
+                clientNameErrors.length ? "validation-error" : ""
+              }`}
               type="text"
-              name="customerName"
-              id="customerName"
-              required
+              name="clientName"
+              id="clientName"
+              // required Commented it out just to test the local validation
             />
+
+            {clientNameErrors.map((error) => (
+              <span key={error.Code} className="validation-message">
+                {error.Message}
+              </span>
+            ))}
           </div>
 
+          {/* AppointmentTime */}
           <div className="form-element">
             <label className="form-element-label" htmlFor="datetime">
               Date and time
             </label>
 
             <input
-              className="form-element-input"
+              className={`form-element-input ${
+                appointmentTimeErrors.length ? "validation-error" : ""
+              }`}
               type="text"
               name="datetime"
               id="datetime"
               required
             />
+
+            {appointmentTimeErrors.map((error) => (
+              <span key={error.Code} className="validation-message">
+                {error.Message}
+              </span>
+            ))}
           </div>
 
+          {/* Duration */}
           <div className="form-element">
-            <label className="form-element-label" htmlFor="Duration">
+            <label className="form-element-label" htmlFor="duration">
               Duration
             </label>
 
             <input
-              className="form-element-input"
-              type="number"
-              name="Duration"
-              id="Duration"
+              className={`form-element-input ${
+                durationErrors.length ? "validation-error" : ""
+              }`}
+              // type="number" Commented it out just to test the local validation
+              type="text"
+              name="duration"
+              id="duration"
             />
+
+            {durationErrors.map((error) => (
+              <span key={error.Code} className="validation-message">
+                {error.Message}
+              </span>
+            ))}
           </div>
         </fieldset>
 
